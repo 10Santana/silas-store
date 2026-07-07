@@ -202,8 +202,9 @@
             btn.disabled = true;
 
             try {
-                // Envia os produtos + o endereço do cliente para a API do Mercado Pago
-                const response = await fetch('/api/checkout', {
+                // Envia os produtos + o endereço do cliente para a API do Mercado Pago cons
+const response = await fetch('https://silas-store-beta.vercel.app/api/checkout', {
+
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
