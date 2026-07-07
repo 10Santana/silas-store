@@ -6,15 +6,16 @@
     <style>
         body { 
             font-family: 'Arial', sans-serif; 
-            margin: 0; 
-            background-color: #f8f9fa; 
-            color: #333;
-            /* Logo no fundo */
-            background-image: url('imagens/Fundo.jpeg');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-attachment: fixed;
-            background-size: 300px;
+    margin: 0; 
+    color: #333;
+    /* Configuração para o logo ocupar a página toda */
+    background-image: url('imagens/logo.png'); /* Verifique o nome do arquivo */
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover; /* Isso faz a imagem esticar para preencher tudo */
+    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco levemente transparente */
+    background-blend-mode: lighten; /* Mistura a imagem com o fundo */
         }
         nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
         .hero { padding: 40px; background: white; text-align: center; }
