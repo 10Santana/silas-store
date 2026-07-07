@@ -2,238 +2,36 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bom Dia Pra Quem Store - Canecas e Camisetas</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f7f6; color: #333; }
-        header { background-color: #111; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 24px; font-weight: bold; color: #ff4757; }
-        .cart-icon { cursor: pointer; background: #ff4757; padding: 10px 15px; border-radius: 5px; font-weight: bold; }
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 3fr 1fr; gap: 30px; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
-        .product-card:hover { transform: translateY(-5px); }
-        .product-img { width: 100%; height: 200px; background-color: #ddd; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #666; font-weight: bold; margin-bottom: 15px; }
-        .product-title { font-size: 18px; margin-bottom: 10px; }
-        .product-price { font-size: 20px; color: #ff4757; font-weight: bold; margin-bottom: 15px; }
-        .btn-add { background: #111; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
-        .btn-add:hover { background: #ff4757; }
-        .cart-sidebar { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content; }
-        .cart-title { font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px id #eee; font-size: 14px; }
-        .cart-total { font-size: 18px; font-weight: bold; margin-top: 20px; display: flex; justify-content: space-between; }
-        .btn-checkout { background: #2ed573; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        .btn-checkout:hover { background: #26af5f; }
-    </style>
+    <title>Silas Store</title>
 </head>
 <body>
+    <h1>Loja Silas</h1>
+    <button class="btn-checkout" onclick="finalizarCompra()">Realizar Pagamento</button>
 
-    <header>
-        <div class="logo">SANTANA STORE</div>
-        <div class="cart-icon">🛒 Carrinho (<span id="cart-count">0</span>)</div>
-    </header>
-
-    <div class="container">
-        <!-- Vitrine de Produtos -->
-        <main class="products-grid" id="products-container">
-            <!-- Os produtos serão gerados aqui pelo JavaScript -->
-        </main>
-
-        <!-- Lateral do Carrinho com Formulário de Entrega -->
-        <aside class="cart-sidebar">
-            <div class="cart-title">Seu Carrinho</div>
-            <div id="cart-items-container">
-                <!-- Itens adicionados aparecem aqui -->
-            </div>
-            <div class="cart-total" style="margin-bottom: 20px;">
-                <span>Total:</span>
-                <span>R$ <span id="cart-total-value">0.00</span></span>
-            </div>
-
-            <!-- NOVO: Form de Dados de Entrega -->
-            <div class="cart-title" style="font-size: 16px; margin-top: 20px;">Dados de Entrega</div>
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="entrega-nome" placeholder="Seu Nome Completo" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                <input type="text" id="entrega-whatsapp" placeholder="WhatsApp (com DDD)" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                
-                <div style="display: flex; gap: 5px;">
-                    <input type="text" id="entrega-cep" placeholder="CEP" onblur="buscarCEP()" style="width: 60%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                    <button type="button" onclick="buscarCEP()" style="width: 40%; background: #111; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Buscar CEP</button>
-                </div>
-
-                <input type="text" id="entrega-rua" placeholder="Rua / Logradouro" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                
-                <div style="display: flex; gap: 5px;">
-                    <input type="text" id="entrega-numero" placeholder="Nº" style="width: 30%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                    <input type="text" id="entrega-comp" placeholder="Complemento (Ap, Bloco)" style="width: 70%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                </div>
-
-                <input type="text" id="entrega-bairro" placeholder="Bairro" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                
-                <div style="display: flex; gap: 5px;">
-                    <input type="text" id="entrega-cidade" placeholder="Cidade" style="width: 70%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" readonly>
-                    <input type="text" id="entrega-estado" placeholder="UF" style="width: 30%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" readonly>
-                </div>
-            </div>
-
-            <button class="btn-checkout" onclick="finalizarCompra()">Realizar Pagamento</button>
-        </aside>
-
-
-        <script>
-        // 1. Sua lista de produtos reais (que já está funcionando!)
-        const produtos = [
-            { id: 1, nome: "Caneca de Porcelana Preta", preco: 70.90, imagem: "imagens/Caneca Preta.jpeg" },
-            { id: 2, nome: "Caneca de Porcelana vermelha", preco: 80.90, imagem: "imagens/Caneca Vermelha.jpeg" },
-            { id: 3, nome: "Camiseta Preta", preco: 120.00, imagem: "imagens/Camiseta Preta.jpeg" }
-        ];
-
-        let carrinho = [];
-
-        // 2. Mostra os produtos na tela
-        function renderizarProdutos() {
-            const container = document.getElementById('products-container');
-            container.innerHTML = '';
-            
-            produtos.forEach(prod => {
-                container.innerHTML += `
-                    <div class="product-card">
-                        <img src="${prod.imagem}" alt="${prod.nome}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 15px;">
-                        <div class="product-title">${prod.nome}</div>
-                        <div class="product-price">R$ ${prod.preco.toFixed(2)}</div>
-                        <button class="btn-add" onclick="adicionarAoCarrinho(${prod.id})">Adicionar ao Carrinho</button>
-                    </div>
-                `;
-            });
-        }
-
-        // 3. Adiciona itens ao carrinho lateral
-        function adicionarAoCarrinho(id) {
-            const produto = produtos.find(p => p.id === id);
-            carrinho.push(produto);
-            atualizarCarrinho();
-        }
-
-        // 4. Atualiza os valores do carrinho na tela
-        function atualizarCarrinho() {
-            document.getElementById('cart-count').innerText = carrinho.length;
-            const container = document.getElementById('cart-items-container');
-            container.innerHTML = '';
-            
-            let total = 0;
-            carrinho.forEach(item => {
-                total += item.preco;
-                container.innerHTML += `
-                    <div class="cart-item">
-                        <span>${item.nome}</span>
-                        <strong>R$ ${item.preco.toFixed(2)}</strong>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('cart-total-value').innerText = total.toFixed(2);
-        }
-
-        // ========================================================
-        // NOVO: Essa é a função que busca o CEP automaticamente
-        // ========================================================
-        async function buscarCEP() {
-            // Pega o que o cliente digitou e remove traços ou pontos
-            const cep = document.getElementById('entrega-cep').value.replace(/\D/g, '');
-            
-            // Se não tiver 8 números, não faz nada
-            if (cep.length !== 8) return;
-
-            try {
-                // Conversa com o servidor dos Correios (ViaCEP)
-                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-                const dados = await response.json();
-
-                // Se o CEP existir, preenche os campos automaticamente
-                if (!dados.erro) {
-                    document.getElementById('entrega-rua').value = dados.logradouro;
-                    document.getElementById('entrega-bairro').value = dados.bairro;
-                    document.getElementById('entrega-cidade').value = dados.localidade;
-                    document.getElementById('entrega-estado').value = dados.uf;
-                    
-                    // Coloca o cursor piscando direto no campo do Número da casa
-                    document.getElementById('entrega-numero').focus(); 
-                } else {
-                    alert("CEP não encontrado! Digite o endereço manualmente.");
-                }
-            } catch (error) {
-                console.error("Erro ao buscar CEP:", error);
-            }
-        }
-
-        // ========================================================
-        // NOVO: Função de finalizar compra que JUNTA carrinho + endereço
-        // ========================================================
+    <script>
         async function finalizarCompra() {
-            // Trava 1: Se o carrinho estiver vazio
-            if (carrinho.length === 0) {
-                alert("Seu carrinho está vazio!");
-                return;
-            }
-
-            // Pega todos os dados que o cliente digitou nas caixas de texto
-            const entrega = {
-                nome: document.getElementById('entrega-nome').value.trim(),
-                whatsapp: document.getElementById('entrega-whatsapp').value.trim(),
-                cep: document.getElementById('entrega-cep').value.trim(),
-                rua: document.getElementById('entrega-rua').value.trim(),
-                numero: document.getElementById('entrega-numero').value.trim(),
-                complemento: document.getElementById('entrega-comp').value.trim(),
-                bairro: document.getElementById('entrega-bairro').value.trim(),
-                cidade: document.getElementById('entrega-cidade').value.trim(),
-                estado: document.getElementById('entrega-estado').value.trim()
-            };
-
-            // Trava 2: Se faltar preencher algum dado obrigatório do endereço
-            if (!entrega.nome || !entrega.whatsapp || !entrega.cep || !entrega.rua || !entrega.numero || !entrega.bairro) {
-                alert("Por favor, preencha todos os campos de entrega antes de realizar o pagamento!");
-                return;
-            }
-
-            // Se passou pelas travas, muda o botão para carregar
-            const btn = document.querySelector('.btn-checkout');
-            btn.innerText = "Processando Pagamento...";
-            btn.disabled = true;
+            const dadosEntrega = { nome: "Ailton", whatsapp: "11945140678" };
+            const itens = [{ id: 2, nome: "Caneca de Porcelana vermelha", preco: 80.90 }];
 
             try {
-                // Envia os produtos + o endereço do cliente para a API do Mercado Pago cons
-const response = await fetch('/api/checkout', {
-
+                const response = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        itens: carrinho,
-                        dadosEntrega: entrega 
-                    })
+                    body: JSON.stringify({ dadosEntrega, itens })
                 });
 
-                const dados = await response.json();
+                const data = await response.json();
 
-                // Se o Mercado Pago responder com o link, joga o cliente para a tela de pagamento
-                if (dados.url) {
-                    window.location.href = dados.url;
+                if (data.init_point) {
+                    window.location.href = data.init_point;
                 } else {
-                    alert("Erro ao gerar o link de pagamento. Tente novamente.");
-                    btn.innerText = "Realizar Pagamento";
-                    btn.disabled = false;
+                    alert("Erro ao criar pagamento: " + (data.error || "Tente novamente"));
                 }
-
-            } catch (erro) {
-                console.error("Erro:", erro);
-                alert("Erro na conexão com o servidor de pagamentos.");
-                btn.innerText = "Realizar Pagamento";
-                btn.disabled = false;
+            } catch (error) {
+                console.error("Erro na conexão:", error);
+                alert("Erro ao conectar ao servidor.");
             }
         }
-
-        // Inicia a vitrine assim que o site abre
-        renderizarProdutos();
     </script>
 </body>
 </html>
