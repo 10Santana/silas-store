@@ -2,65 +2,51 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Silas Store | Loja Oficial</title>
+    <title>Silas Store | Estamparia Profissional</title>
     <style>
-        /* Estilização focada no exemplo enviado */
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f8f9fa; color: #333; }
         
-        /* Cabeçalho */
-        header { background-color: #ffffff; padding: 20px; text-align: center; border-bottom: 3px solid #dee2e6; }
+        /* Menu Superior Estilo Primos */
+        nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
+        .logo { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        .menu-links a { margin-left: 20px; text-decoration: none; color: #555; font-weight: bold; }
         
-        /* Container principal */
-        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
+        /* Hero Section (Área principal) */
+        .hero { display: flex; align-items: center; padding: 50px; background: white; }
+        .hero-text { flex: 1; padding-right: 50px; }
+        .hero-text h1 { font-size: 48px; color: #2c3e50; }
+        .hero-buttons { margin-top: 20px; }
         
-        /* Grid de Produtos */
-        .loja-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .produto-card { background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center; }
-        
-        /* Área do Formulário de Checkout */
-        .checkout-area { background: #ffffff; padding: 30px; border-radius: 8px; margin-top: 30px; border: 1px solid #e0e0e0; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #495057; }
-        input { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
-        
-        .btn-finalizar { background-color: #28a745; color: white; padding: 15px; width: 100%; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 10px; }
-        .btn-finalizar:hover { background-color: #218838; }
+        .btn-cta { padding: 15px 30px; border: none; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; margin-right: 10px; }
+        .btn-whatsapp { background-color: #e74c3c; }
+        .btn-email { background-color: #34495e; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Silas Store</h1>
-    </header>
+    <nav>
+        <div class="logo">SILAS STORE</div>
+        <div class="menu-links">
+            <a href="#">LAR</a>
+            <a href="#">QUEM SOMOS</a>
+            <a href="#">GALERIA</a>
+            <a href="#">CONTATO</a>
+        </div>
+    </nav>
 
-    <div class="container">
-        <!-- Vitrine -->
-        <div class="loja-grid">
-            <div class="produto-card">
-                <h3>Caneca de Porcelana</h3>
-                <p>R$ 70,90</p>
-            </div>
-            <div class="produto-card">
-                <h3>Camiseta Preta</h3>
-                <p>R$ 120,00</p>
+    <div class="hero">
+        <div class="hero-text">
+            <h1>ESTAMPARIA DE CAMISETAS E TECIDOS</h1>
+            <p>Transforme suas ideias em realidade com a nossa estamparia! Qualidade, durabilidade e cores vibrantes.</p>
+            <div class="hero-buttons">
+                <button class="btn-cta btn-whatsapp">ORÇAMENTO VIA WHATSAPP</button>
+                <button class="btn-cta btn-email">ORÇAMENTO VIA E-MAIL</button>
             </div>
         </div>
-
-        <!-- Formulário de Dados -->
-        <div class="checkout-area">
-            <h2>Finalizar Pedido</h2>
-            <div class="input-group"><label>Nome Completo</label><input type="text"></div>
-            <div class="input-group"><label>Endereço</label><input type="text"></div>
-            <div class="input-group"><label>CEP</label><input type="text" placeholder="00000-000"></div>
-            <button class="btn-finalizar" onclick="finalizarCompra()">Realizar Pagamento</button>
+        <div class="hero-image">
+            <img src="https://via.placeholder.com/400" alt="Camiseta">
         </div>
     </div>
 
-    <script>
-        function finalizarCompra() {
-            alert("Processando pagamento...");
-            // Lógica de integração com API de pagamento será inserida aqui
-        }
-    </script>
 </body>
 </html>
