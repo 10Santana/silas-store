@@ -2,87 +2,64 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silas Store | Loja Oficial</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 20px; }
-        h1 { text-align: center; color: #1a365d; margin-bottom: 30px; }
+        /* Estilização focada no exemplo enviado */
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
         
-        .loja-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .produto-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 250px; text-align: center; }
-        .produto-card img { width: 100%; border-radius: 10px; }
+        /* Cabeçalho */
+        header { background-color: #ffffff; padding: 20px; text-align: center; border-bottom: 3px solid #dee2e6; }
         
-        .frete-container { background: #fff; padding: 20px; border-radius: 10px; max-width: 400px; margin: 30px auto; border: 1px solid #ddd; text-align: center; }
-        input { padding: 10px; width: 60%; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-frete { background: #3182ce; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        /* Container principal */
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
         
-        .btn-checkout { background-color: #e53e3e; color: white; padding: 15px 40px; border: none; border-radius: 30px; font-size: 18px; cursor: pointer; display: block; margin: 20px auto; }
+        /* Grid de Produtos */
+        .loja-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .produto-card { background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center; }
+        
+        /* Área do Formulário de Checkout */
+        .checkout-area { background: #ffffff; padding: 30px; border-radius: 8px; margin-top: 30px; border: 1px solid #e0e0e0; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #495057; }
+        input { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+        
+        .btn-finalizar { background-color: #28a745; color: white; padding: 15px; width: 100%; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 10px; }
+        .btn-finalizar:hover { background-color: #218838; }
     </style>
 </head>
 <body>
 
-    <h1>Silas Store</h1>
+    <header>
+        <h1>Silas Store</h1>
+    </header>
 
-    <div class="loja-container">
-        <div class="produto-card">
-            <img src="imagens/CanecaPreta.jpeg" alt="Caneca">
-            <h3>Caneca de Porcelana</h3>
-            <p style="color: #27ae60; font-weight: bold;">R$ 70,90</p>
+    <div class="container">
+        <!-- Vitrine -->
+        <div class="loja-grid">
+            <div class="produto-card">
+                <h3>Caneca de Porcelana</h3>
+                <p>R$ 70,90</p>
+            </div>
+            <div class="produto-card">
+                <h3>Camiseta Preta</h3>
+                <p>R$ 120,00</p>
+            </div>
         </div>
 
-        <div class="produto-card">
-            <img src="imagens/CamisetaPreta.jpeg" alt="Camiseta">
-            <h3>Camiseta Preta</h3>
-            <p style="color: #27ae60; font-weight: bold;">R$ 120,00</p>
+        <!-- Formulário de Dados -->
+        <div class="checkout-area">
+            <h2>Finalizar Pedido</h2>
+            <div class="input-group"><label>Nome Completo</label><input type="text"></div>
+            <div class="input-group"><label>Endereço</label><input type="text"></div>
+            <div class="input-group"><label>CEP</label><input type="text" placeholder="00000-000"></div>
+            <button class="btn-finalizar" onclick="finalizarCompra()">Realizar Pagamento</button>
         </div>
     </div>
-
-    <div class="frete-container">
-        <h3>Calcular Frete</h3>
-        <input type="text" id="cep" placeholder="Digite seu CEP (00000-000)">
-        <button class="btn-frete" onclick="calcularFrete()">Calcular</button>
-        <p id="resultadoFrete" style="margin-top: 10px;"></p>
-    </div>
-
-    <button class="btn-checkout" onclick="finalizarCompra()">Finalizar Compra</button>
 
     <script>
-        function calcularFrete() {
-            const cep = document.getElementById('cep').value;
-            const res = document.getElementById('resultadoFrete');
-            if (cep.length >= 8) {
-                res.innerText = "Frete para " + cep + ": R$ 15,90";
-                res.style.color = "green";
-            } else {
-                res.innerText = "CEP inválido.";
-                res.style.color = "red";
-            }
-        }
-
-        async function finalizarCompra() {
-            const dadosEntrega = { nome: "Ailton", whatsapp: "11945140678" };
-            const itens = [
-                { id: 1, nome: "Caneca de Porcelana", preco: 70.90 },
-                { id: 3, nome: "Camiseta Preta", preco: 120.00 }
-            ];
-
-            try {
-                const response = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ dadosEntrega, itens })
-                });
-
-                const data = await response.json();
-                if (data.init_point) {
-                    window.location.href = data.init_point;
-                } else {
-                    alert("Erro ao criar pagamento.");
-                }
-            } catch (error) {
-                console.error("Erro:", error);
-                alert("Erro ao conectar ao servidor.");
-            }
+        function finalizarCompra() {
+            alert("Processando pagamento...");
+            // Lógica de integração com API de pagamento será inserida aqui
         }
     </script>
 </body>
