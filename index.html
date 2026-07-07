@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bom Dia Pra Quem Store - Canecas e Camisetas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; }
+        header { background-color: #111; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 24px; font-weight: bold; color: #ff4757; }
+        .cart-icon { cursor: pointer; background: #ff4757; padding: 10px 15px; border-radius: 5px; font-weight: bold; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 3fr 1fr; gap: 30px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); }
+        .product-img { width: 100%; height: 200px; background-color: #ddd; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #666; font-weight: bold; margin-bottom: 15px; }
+        .product-title { font-size: 18px; margin-bottom: 10px; }
+        .product-price { font-size: 20px; color: #ff4757; font-weight: bold; margin-bottom: 15px; }
+        .btn-add { background: #111; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        .btn-add:hover { background: #ff4757; }
+        .cart-sidebar { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content; }
+        .cart-title { font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px id #eee; font-size: 14px; }
+        .cart-total { font-size: 18px; font-weight: bold; margin-top: 20px; display: flex; justify-content: space-between; }
+        .btn-checkout { background: #2ed573; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .btn-checkout:hover { background: #26af5f; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">SANTANA STORE</div>
+        <div class="cart-icon">🛒 Carrinho (<span id="cart-count">0</span>)</div>
+    </header>
+
+    <div class="container">
+        <!-- Vitrine de Produtos -->
+        <main class="products-grid" id="products-container">
+            <!-- Os produtos serão gerados aqui pelo JavaScript -->
+        </main>
+
+        <!-- Lateral do Carrinho -->
+        <aside class="cart-sidebar">
+            <div class="cart-title">Seu Carrinho</div>
+            <div id="cart-items-container">
+                <!-- Itens adicionados aparecem aqui -->
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span>R$ <span id="cart-total-value">0.00</span></span>
+            </div>
+            <button class="btn-checkout" onclick="finalizarCompra()">Realizar Pagamento</button>
+        </aside>
+    </div>
+
+    <script>
+        // Lista de produtos inicial
+        const produtos = [
+            { id: 1, nome: "Caneca Porcelana Preta Premium", preco: 39.90, imagem: "☕ Imagem da Caneca" },
+            { id: 2, nome: "Caneca Branca Sublimação", preco: 34.90, imagem: "☕ Imagem da Caneca" },
+            { id: 3, nome: "Camiseta Estampa Minimalista P/M/G", preco: 69.90, imagem: "👕 Imagem da Camiseta" },
+            { id: 4, nome: "Camiseta Dev Fullstack Preta", preco: 79.90, imagem: "👕 Imagem da Camiseta" }
+        ];
+
+        let carrinho = [];
+
+        // Função para desenhar os produtos na tela
+        function renderizarProdutos() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            
+            produtos.forEach(prod => {
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-img">${prod.imagem}</div>
+                        <div class="product-title">${prod.nome}</div>
+                        <div class="product-price">R$ ${prod.preco.toFixed(2)}</div>
+                        <button class="btn-add" onclick="adicionarAoCarrinho(${prod.id})">Adicionar ao Carrinho</button>
+                    </div>
+                `;
+            });
+        }
+
+        function adicionarAoCarrinho(id) {
+            const produto = produtos.find(p => p.id === id);
+            carrinho.push(produto);
+            atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+            document.getElementById('cart-count').innerText = carrinho.length;
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            
+            let total = 0;
+            carrinho.forEach(item => {
+                total += item.preco;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <span>${item.nome}</span>
+                        <strong>R$ ${item.preco.toFixed(2)}</strong>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('cart-total-value').innerText = total.toFixed(2);
+        }
+
+        function finalizarCompra() {
+            if(carrinho.length === 0) {
+                alert("Seu carrinho está vazio!");
+                return;
+            }
+            alert("Perfeito! O carrinho está estruturado. No próximo passo vamos conectar o Mercado Pago/Stripe aqui para gerar o Pix ou Cartão!");
+        }
+
+        // Executa ao carregar a página
+        renderizarProdutos();
+    </script>
+</body>
+</html>
