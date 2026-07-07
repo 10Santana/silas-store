@@ -4,7 +4,18 @@
     <meta charset="UTF-8">
     <title>Silas Store | Loja Oficial</title>
     <style>
-        body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f8f9fa; color: #333; }
+        body { 
+            font-family: 'Arial', sans-serif; 
+            margin: 0; 
+            background-color: #f8f9fa; 
+            color: #333;
+            /* Logo no fundo */
+            background-image: url('imagens/Fundo.jpeg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: 300px;
+        }
         nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
         .hero { padding: 40px; background: white; text-align: center; }
         .produtos-container { padding: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
@@ -31,13 +42,12 @@
             <img src="imagens/Caneca Vermelha.jpeg" alt="Caneca">
             <h3>Caneca de Vermelha</h3>
             <p>R$ 80,00</p>
-            </div>
-            <div class="card" onclick="selecionarProduto(this, 70.90, 'Caneca de Preta')">
+        </div>
+        <div class="card" onclick="selecionarProduto(this, 70.90, 'Caneca de Preta')">
             <img src="imagens/Caneca Preta.jpeg" alt="Caneca">
             <h3>Caneca de Preta</h3>
             <p style="font-size: 0.85em; color: #555; margin-top: -10px; margin-bottom: 10px;">Caneca de Porcelana Preta Fosca com Letras em Alto-Relevo</p>
             <p>R$ 70,00</p>
-        </div>
         </div>
     </div>
     <div class="form-area">
@@ -49,7 +59,7 @@
     </div>
     <script>
         let produtoSelecionado = { nome: '', preco: 0 };
-        const VALOR_FRETE = 15.90; // Defina seu frete fixo aqui
+        const VALOR_FRETE = 15.90;
 
         function selecionarProduto(el, preco, nome) {
             document.querySelectorAll('.card').forEach(c => c.classList.remove('selecionado'));
@@ -68,7 +78,6 @@
                     endereco: endereco, 
                     whatsapp: document.getElementById('whatsapp').value 
                 },
-                // Aqui o valor do produto já é somado com o frete automaticamente
                 itens: [{ id: "1", nome: produtoSelecionado.nome, preco: produtoSelecionado.preco + VALOR_FRETE }]
             };
             const response = await fetch('/api/checkout', {
