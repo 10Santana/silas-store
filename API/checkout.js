@@ -29,8 +29,7 @@ export default async function handler(req, res) {
         const response = await fetch('https://api.mercadopago.com/v1/preferences', {
             method: 'POST',
             headers: {
-                // ⚠️ ATENÇÃO: Substitua a palavra abaixo pelo seu Access Token real do Mercado Pago
-                'Authorization': `Bearer APP_USR-6785123456789012-070712-xxxxxxxxxxxxxxxxx`, 
+                'Authorization': `Bearer 7092247682103222-070701-c610f9f1eea74f513efcefc53cd6ca6b-582592742`, 
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
