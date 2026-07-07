@@ -1,26 +1,20 @@
 export default async function handler(req, res) {
-  // 1. Verifica se o método é POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método não permitido' });
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' });
 
   try {
     const { dadosEntrega, itens } = req.body;
 
-    // 2. Formatação dos itens para o padrão do Mercado Pago
     const itemsFormatados = itens.map(item => ({
-      id: String(item.id),
+      id: "1",
       title: item.nome, 
-      unit_price: Number(item.preco),
+      unit_price: Number(item.preco), // Já contém o frete somado
       quantity: 1,
       currency_id: 'BRL'
     }));
 
-    // 3. Chamada à API do Mercado Pago
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
-        // COLOQUE SEU TOKEN AQUI
         'Authorization': 'Bearer APP_USR-8249237627440279-070701-567e4b90a35016d1872b502ad8160848-3525454934', 
         'Content-Type': 'application/json',
       },
@@ -28,30 +22,18 @@ export default async function handler(req, res) {
         items: itemsFormatados,
         payer: {
           name: dadosEntrega.nome,
-          phone: { number: String(dadosEntrega.whatsapp) }
+          phone: { number: String(dadosEntrega.whatsapp) },
+          address: { street_name: dadosEntrega.endereco }
         },
-        back_urls: {
-          success: "https://silas-store-beta.vercel.app/",
-          failure: "https://silas-store-beta.vercel.app/",
-          pending: "https://silas-store-beta.vercel.app/"
-        },
+        back_urls: { success: "https://silas-store-beta.vercel.app/", failure: "https://silas-store-beta.vercel.app/" },
         auto_return: "approved"
       }),
     });
 
     const data = await response.json();
-
-    // 4. Se a API do Mercado Pago retornar erro
-    if (!response.ok) {
-      console.error('Erro Mercado Pago:', data);
-      throw new Error(data.message || 'Erro ao criar preferência');
-    }
-
-    // 5. Retorna o init_point para o front-end redirecionar
+    if (!response.ok) throw new Error(data.message);
     return res.status(200).json(data);
-
   } catch (error) {
-    console.error('Erro no servidor:', error);
     return res.status(500).json({ error: error.message });
   }
 }
