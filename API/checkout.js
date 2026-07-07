@@ -1,6 +1,7 @@
 // api/checkout.js
+import fetch from 'node-fetch';
+
 export default async function handler(req, res) {
-    // Permite que o seu site envie dados para cá de forma segura
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -16,7 +17,6 @@ export default async function handler(req, res) {
     try {
         const { itens, dadosEntrega } = req.body;
 
-        // Organiza a lista de produtos para o Mercado Pago entender
         const itemsMercadoPago = itens.map(item => ({
             id: item.id.toString(),
             title: item.nome,
@@ -25,11 +25,10 @@ export default async function handler(req, res) {
             unit_price: parseFloat(item.preco)
         }));
 
-        // Faz a chamada segura para o servidor do Mercado Pago
         const response = await fetch('https://api.mercadopago.com/v1/preferences', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer 7092247682103222-070701-c610f9f1eea74f513efcefc53cd6ca6b-582592742`, 
+                'Authorization': `Bearer APP_USR-8249237627440279-070701-567e4b90a35016d1872b502ad8160848-352545494`, 
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -56,7 +55,10 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        // Devolve o link oficial do Pix/Cartão para o site do cliente
+        if (!response.ok || !data.init_point) {
+            return res.status(400).json({ error: 'Erro ao gerar preferência', detalhes: data });
+        }
+
         return res.status(200).json({ url: data.init_point });
 
     } catch (error) {
