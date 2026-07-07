@@ -5,25 +5,39 @@
     <title>Silas Store | Loja Oficial</title>
     <style>
         body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f8f9fa; color: #333; }
-        nav { background: white; padding: 20px; text-align: center; border-bottom: 2px solid #ddd; }
+        
+        nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
+        .logo { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        
+        .hero { padding: 40px; background: white; text-align: center; }
+        
         .produtos-container { padding: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        /* Adicionamos o efeito de seleção no CSS */
+        
+        /* Estilo dos cards com seleção */
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; cursor: pointer; border: 3px solid transparent; transition: 0.3s; }
+        .card:hover { transform: scale(1.02); }
         .card.selecionado { border: 3px solid #28a745; }
+        
         .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
         
         .form-area { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .input-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-acao { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 30px; width: 100%; cursor: pointer; margin-top: 10px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        
+        .btn-acao { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .btn-frete { background-color: #007bff; }
     </style>
 </head>
 <body>
 
-    <nav><div class="logo">SILAS STORE</div></nav>
+    <nav>
+        <div class="logo">SILAS STORE</div>
+        <div class="menu-links"><a href="#">INÍCIO</a> | <a href="#">PRODUTOS</a></div>
+    </nav>
+
+    <div class="hero"><h1>LOJA OFICIAL SILAS STORE</h1></div>
 
     <div class="produtos-container">
-        <!-- Adicionado onclick para selecionar o produto -->
         <div class="card" onclick="selecionarProduto(this, 120.00, 'Camiseta Preta')">
             <img src="imagens/CamisetaPreta.jpeg" alt="Camiseta">
             <h3>Camiseta Preta</h3>
@@ -38,39 +52,57 @@
 
     <div class="form-area">
         <h3>Dados de Entrega</h3>
-        <div class="input-group"><input type="text" id="nome" placeholder="Nome"></div>
-        <div class="input-group"><input type="text" id="cep" placeholder="CEP"></div>
-        <button class="btn-acao" style="background:#007bff;" onclick="calcularFrete()">CALCULAR FRETE</button>
-        <p id="resultado" style="font-weight: bold;"></p>
+        <div class="input-group"><input type="text" id="nome" placeholder="Nome Completo"></div>
+        <div class="input-group"><input type="text" id="endereco" placeholder="Endereço Completo"></div>
+        <div class="input-group"><input type="text" id="cep" placeholder="CEP (00000-000)"></div>
+        <button class="btn-acao btn-frete" onclick="calcularFrete()">CALCULAR FRETE</button>
+        <p id="resultadoFrete" style="text-align: center; font-weight: bold;"></p>
+        
         <button class="btn-acao" onclick="finalizarCompra()">FINALIZAR COMPRA</button>
     </div>
 
     <script>
         let produtoSelecionado = { nome: '', preco: 0 };
-        let valorFrete = 15.90;
+        const valorFrete = 15.90;
 
-        function selecionarProduto(el, preco, nome) {
+        function selecionarProduto(elemento, preco, nome) {
             document.querySelectorAll('.card').forEach(c => c.classList.remove('selecionado'));
-            el.classList.add('selecionado');
+            elemento.classList.add('selecionado');
             produtoSelecionado = { nome, preco };
         }
 
         function calcularFrete() {
-            document.getElementById('resultado').innerText = "Frete: R$ " + valorFrete.toFixed(2);
+            const cep = document.getElementById('cep').value;
+            if(cep.length >= 8) {
+                document.getElementById('resultadoFrete').innerText = "Frete para " + cep + ": R$ " + valorFrete.toFixed(2);
+            } else {
+                alert("Por favor, informe um CEP válido.");
+            }
         }
 
         async function finalizarCompra() {
             if(!produtoSelecionado.nome) return alert("Selecione um produto primeiro!");
             
-            const total = produtoSelecionado.preco + valorFrete;
             const pedido = {
                 nome: document.getElementById('nome').value,
-                total: total,
-                item: produtoSelecionado.nome
+                endereco: document.getElementById('endereco').value,
+                cep: document.getElementById('cep').value,
+                item: produtoSelecionado.nome,
+                total: produtoSelecionado.preco + valorFrete
             };
             
-            alert("Resumo: " + produtoSelecionado.nome + " | Total com frete: R$ " + total.toFixed(2));
-            // Aqui segue a chamada fetch para o seu /api/checkout
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pedido)
+            });
+            
+            const data = await response.json();
+            if(data.init_point) {
+                window.location.href = data.init_point;
+            } else {
+                alert("Erro ao processar pagamento.");
+            }
         }
     </script>
 </body>
