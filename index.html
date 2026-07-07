@@ -3,15 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Silas Store</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        .produto { border: 1px solid #ccc; padding: 15px; margin: 10px; display: inline-block; width: 250px; }
+        img { width: 100%; height: auto; }
+        .btn-checkout { background-color: #28a745; color: white; padding: 15px 30px; border: none; cursor: pointer; font-size: 16px; margin-top: 20px; }
+    </style>
 </head>
 <body>
     <h1>Loja Silas</h1>
+
+    <!-- Seção de Produtos -->
+    <div class="produto">
+        <img src="imagens/CanecaPreta.jpeg" alt="Caneca">
+        <p>Caneca de Porcelana - R$ 70,90</p>
+    </div>
+
+    <div class="produto">
+        <img src="imagens/CamisetaPreta.jpeg" alt="Camiseta">
+        <p>Camiseta Preta - R$ 120,00</p>
+    </div>
+
+    <br>
     <button class="btn-checkout" onclick="finalizarCompra()">Realizar Pagamento</button>
 
     <script>
         async function finalizarCompra() {
             const dadosEntrega = { nome: "Ailton", whatsapp: "11945140678" };
-            const itens = [{ id: 2, nome: "Caneca de Porcelana vermelha", preco: 80.90 }];
+            // Certifique-se de que o preço corresponde ao que você quer cobrar
+            const itens = [
+                { id: 1, nome: "Caneca de Porcelana", preco: 70.90 },
+                { id: 3, nome: "Camiseta Preta", preco: 120.00 }
+            ];
 
             try {
                 const response = await fetch('/api/checkout', {
