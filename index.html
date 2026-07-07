@@ -2,24 +2,25 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Silas Store | Estamparia Profissional</title>
+    <title>Silas Store | Loja Oficial</title>
     <style>
         body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f8f9fa; color: #333; }
         
-        /* Menu Superior Estilo Primos */
+        /* Menu Superior */
         nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
         .logo { font-size: 24px; font-weight: bold; color: #2c3e50; }
         .menu-links a { margin-left: 20px; text-decoration: none; color: #555; font-weight: bold; }
         
-        /* Hero Section (Área principal) */
-        .hero { display: flex; align-items: center; padding: 50px; background: white; }
-        .hero-text { flex: 1; padding-right: 50px; }
-        .hero-text h1 { font-size: 48px; color: #2c3e50; }
-        .hero-buttons { margin-top: 20px; }
+        /* Seção de Destaque */
+        .hero { padding: 50px; background: white; text-align: center; }
+        .hero h1 { font-size: 40px; color: #2c3e50; }
         
-        .btn-cta { padding: 15px 30px; border: none; border-radius: 30px; color: white; font-weight: bold; cursor: pointer; margin-right: 10px; }
-        .btn-whatsapp { background-color: #e74c3c; }
-        .btn-email { background-color: #34495e; }
+        /* Produtos */
+        .produtos-container { padding: 50px; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; }
+        
+        /* Botões */
+        .btn-comprar { background-color: #28a745; color: white; padding: 15px 25px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -27,26 +28,38 @@
     <nav>
         <div class="logo">SILAS STORE</div>
         <div class="menu-links">
-            <a href="#">LAR</a>
-            <a href="#">QUEM SOMOS</a>
-            <a href="#">GALERIA</a>
+            <a href="#">INÍCIO</a>
+            <a href="#">PRODUTOS</a>
             <a href="#">CONTATO</a>
         </div>
     </nav>
 
     <div class="hero">
-        <div class="hero-text">
-            <h1>ESTAMPARIA DE CAMISETAS E TECIDOS</h1>
-            <p>Transforme suas ideias em realidade com a nossa estamparia! Qualidade, durabilidade e cores vibrantes.</p>
-            <div class="hero-buttons">
-                <button class="btn-cta btn-whatsapp">ORÇAMENTO VIA WHATSAPP</button>
-                <button class="btn-cta btn-email">ORÇAMENTO VIA E-MAIL</button>
-            </div>
+        <h1>QUALIDADE EM CANECAS E CAMISETAS</h1>
+        <p>Produtos selecionados com o melhor acabamento e entrega garantida.</p>
+    </div>
+
+    <div class="produtos-container">
+        <!-- Card Camiseta -->
+        <div class="card">
+            <h3>Camiseta Preta</h3>
+            <p>R$ 120,00</p>
+            <button class="btn-comprar" onclick="finalizarCompra()">COMPRAR AGORA</button>
         </div>
-        <div class="hero-image">
-            <img src="https://via.placeholder.com/400" alt="Camiseta">
+
+        <!-- Card Caneca -->
+        <div class="card">
+            <h3>Caneca de Porcelana</h3>
+            <p>R$ 70,90</p>
+            <button class="btn-comprar" onclick="finalizarCompra()">COMPRAR AGORA</button>
         </div>
     </div>
 
+    <script>
+        async function finalizarCompra() {
+            // Lógica de checkout
+            alert("Redirecionando para o pagamento...");
+        }
+    </script>
 </body>
 </html>
