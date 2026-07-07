@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+  // 1. Verifica se o método é POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método não permitido' });
   }
@@ -6,7 +7,7 @@ export default async function handler(req, res) {
   try {
     const { dadosEntrega, itens } = req.body;
 
-    // Formatação dos itens para o padrão do Mercado Pago
+    // 2. Formatação dos itens para o padrão do Mercado Pago
     const itemsFormatados = itens.map(item => ({
       id: String(item.id),
       title: item.nome, 
@@ -15,11 +16,12 @@ export default async function handler(req, res) {
       currency_id: 'BRL'
     }));
 
-    // Chamada à API do Mercado Pago
+    // 3. Chamada à API do Mercado Pago
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer APP_USR-7092247682103222-070701-c610f9f1eea74f513efcefc53cd6ca6b-582592742', 
+        // COLOQUE SEU TOKEN AQUI
+        'Authorization': 'Bearer APP_USR-8249237627440279-070701-567e4b90a35016d1872b502ad8160848-3525454934', 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -39,12 +41,15 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    // 4. Se a API do Mercado Pago retornar erro
     if (!response.ok) {
-      console.error('Erro MP:', data);
+      console.error('Erro Mercado Pago:', data);
       throw new Error(data.message || 'Erro ao criar preferência');
     }
 
+    // 5. Retorna o init_point para o front-end redirecionar
     return res.status(200).json(data);
+
   } catch (error) {
     console.error('Erro no servidor:', error);
     return res.status(500).json({ error: error.message });
