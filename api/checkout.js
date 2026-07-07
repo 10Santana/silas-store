@@ -16,13 +16,13 @@ export default async function handler(req, res) {
 
         const itemsMercadoPago = itens.map(item => ({
             id: item.id.toString(),
-            title: item.nome,
+            title: item.title,
             quantity: 1,
             currency_id: 'BRL',
-            unit_price: parseFloat(item.preco)
+            unit_price: parseFloat(item.unit_price)
         }));
 
-        const response = await fetch('https://api.mercadopago.com/v1/preferences', {
+        const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${process.env.MERCADO_PAGO_ACCESS_TOKEN}`,
