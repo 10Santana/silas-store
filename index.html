@@ -4,72 +4,79 @@
     <meta charset="UTF-8">
     <title>Silas Store | Loja Oficial</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #f8f9fa; margin: 0; padding: 20px; }
-        header { text-align: center; padding: 20px; background: white; border-bottom: 2px solid #ddd; }
-        .container { max-width: 900px; margin: 20px auto; }
+        body { font-family: 'Arial', sans-serif; margin: 0; background-color: #f8f9fa; color: #333; }
+        nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
+        .hero { padding: 40px; background: white; text-align: center; }
+        .produtos-container { padding: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; }
+        .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
         
-        .loja-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .produto-card { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; text-align: center; }
-        .produto-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
-        
-        .checkout-area { background: white; padding: 30px; border-radius: 8px; margin-top: 30px; border: 1px solid #e0e0e0; }
+        .form-area { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .input-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        
-        .btn-acao { background-color: #28a745; color: white; padding: 15px; width: 100%; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 10px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn-acao { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .btn-frete { background-color: #007bff; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Silas Store</h1>
-    </header>
+    <nav>
+        <div class="logo">SILAS STORE</div>
+        <div class="menu-links"><a href="#">INÍCIO</a> | <a href="#">PRODUTOS</a></div>
+    </nav>
 
-    <div class="container">
-        <!-- Vitrine de Produtos -->
-        <div class="loja-grid">
-            <div class="produto-card">
-                <img src="imagens/CamisetaPreta.jpeg" alt="Camiseta Preta">
-                <h3>Camiseta Preta</h3>
-                <p>R$ 120,00</p>
-            </div>
-            <div class="produto-card">
-                <img src="imagens/CanecaPreta.jpeg" alt="Caneca Preta">
-                <h3>Caneca de Porcelana</h3>
-                <p>R$ 70,90</p>
-            </div>
-        </div>
+    <div class="hero"><h1>LOJA OFICIAL SILAS STORE</h1></div>
 
-        <!-- Área de Checkout e Frete -->
-        <div class="checkout-area">
-            <h2>Finalizar Pedido</h2>
-            <div class="input-group"><label>Nome Completo</label><input type="text" id="nome"></div>
-            <div class="input-group"><label>Endereço de Entrega</label><input type="text" id="endereco"></div>
-            <div class="input-group"><label>CEP</label><input type="text" id="cep" placeholder="00000-000"></div>
-            <button class="btn-acao" style="background:#007bff;" onclick="calcularFrete()">Calcular Frete</button>
-            <p id="resultadoFrete" style="font-weight:bold; margin-top:10px;"></p>
-            
-            <button class="btn-acao" onclick="finalizarCompra()">Realizar Pagamento</button>
+    <div class="produtos-container">
+        <div class="card">
+            <img src="imagens/CamisetaPreta.jpeg" alt="Camiseta">
+            <h3>Camiseta Preta</h3>
+            <p>R$ 120,00</p>
         </div>
+        <div class="card">
+            <img src="imagens/CanecaPreta.jpeg" alt="Caneca">
+            <h3>Caneca de Porcelana</h3>
+            <p>R$ 70,90</p>
+        </div>
+    </div>
+
+    <div class="form-area">
+        <h3>Dados de Entrega</h3>
+        <div class="input-group"><input type="text" id="nome" placeholder="Nome Completo"></div>
+        <div class="input-group"><input type="text" id="endereco" placeholder="Endereço Completo"></div>
+        <div class="input-group"><input type="text" id="cep" placeholder="CEP (00000-000)"></div>
+        <button class="btn-acao btn-frete" onclick="calcularFrete()">CALCULAR FRETE</button>
+        <p id="resultadoFrete" style="text-align: center; font-weight: bold;"></p>
+        <button class="btn-acao" onclick="finalizarCompra()">FINALIZAR COMPRA</button>
     </div>
 
     <script>
         function calcularFrete() {
             const cep = document.getElementById('cep').value;
             if(cep.length >= 8) {
-                document.getElementById('resultadoFrete').innerText = "Frete para " + cep + ": R$ 15,90";
+                document.getElementById('resultadoFrete').innerText = "Frete para " + cep + ": R$ 18,90";
             } else {
-                alert("Digite um CEP válido");
+                alert("Por favor, informe um CEP válido.");
             }
         }
 
         async function finalizarCompra() {
-            const nome = document.getElementById('nome').value;
-            if(!nome) return alert("Preencha seu nome");
+            const pedido = {
+                nome: document.getElementById('nome').value,
+                endereco: document.getElementById('endereco').value,
+                cep: document.getElementById('cep').value,
+                total: 190.90
+            };
             
-            alert("Redirecionando " + nome + " para o pagamento...");
-            // Aqui entra sua lógica do fetch para o checkout.js
+            // Aqui ele envia para o seu checkout.js que você já tem no Vercel
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pedido)
+            });
+            
+            const data = await response.json();
+            if(data.init_point) window.location.href = data.init_point;
         }
     </script>
 </body>
