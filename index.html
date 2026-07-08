@@ -20,7 +20,6 @@
         .hero { padding: 40px; background: white; text-align: center; }
         .produtos-container { padding: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
         
-        /* Estilos do Card e trava de estoque */
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; cursor: pointer; border: 3px solid transparent; transition: 0.3s; }
         .card.selecionado { border: 3px solid #28a745; }
         .card.esgotado { opacity: 0.5; cursor: not-allowed; pointer-events: none; filter: grayscale(100%); }
@@ -68,17 +67,10 @@
     </div>
 
     <script>
-        // ESTOQUE CONFIGURÁVEL AQUI
-        const estoque = {
-            'Camiseta Preta': 0,
-            'Caneca de Vermelha': 5,
-            'Caneca de Preta': 11,
-        };
-
+        const estoque = { 'Camiseta Preta': 0, 'Caneca de Vermelha': 5, 'Caneca de Preta': 11 };
         let produtoSelecionado = { nome: '', preco: 0 };
         const VALOR_FRETE = 15.90;
 
-        // Bloqueia itens esgotados automaticamente ao carregar
         window.onload = () => {
             document.querySelectorAll('.card').forEach(card => {
                 const nome = card.querySelector('h3').innerText;
@@ -96,16 +88,15 @@
         }
 
         async function finalizarCompra() {
-            if(!produtoSelecionado.nome) return alert("Selecione um produto!");
+            const nome = document.getElementById('nome').value;
             const endereco = document.getElementById('endereco').value;
-            if(!endereco) return alert("Preencha o endereço!");
+            const whatsapp = document.getElementById('whatsapp').value;
+            
+            if(!produtoSelecionado.nome) return alert("Selecione um produto!");
+            if(!nome || !endereco || !whatsapp) return alert("Preencha todos os dados de entrega!");
 
             const pedido = {
-                dadosEntrega: { 
-                    nome: document.getElementById('nome').value, 
-                    endereco: endereco, 
-                    whatsapp: document.getElementById('whatsapp').value 
-                },
+                dadosEntrega: { nome, endereco, whatsapp },
                 itens: [{ id: "1", nome: produtoSelecionado.nome, preco: produtoSelecionado.preco + VALOR_FRETE }]
             };
             
@@ -115,8 +106,16 @@
                 body: JSON.stringify(pedido)
             });
             const data = await response.json();
-            if(data.init_point) window.location.href = data.init_point;
-            else alert("Erro ao conectar ao pagamento");
+            
+            if(data.init_point) {
+                // Envia dados para o seu WhatsApp antes de redirecionar
+                const mensagem = `Novo pedido na Silas Store!%0ACliente: ${nome}%0AEndereço: ${endereco}%0AProduto: ${produtoSelecionado.nome}`;
+                window.open(`https://wa.me/1194233-6035?text=${mensagem}`, '_blank');
+                
+                window.location.href = data.init_point;
+            } else {
+                alert("Erro ao conectar ao pagamento");
+            }
         }
     </script>
 </body>
