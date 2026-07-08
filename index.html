@@ -4,27 +4,14 @@
     <meta charset="UTF-8">
     <title>Silas Store | Loja Oficial</title>
     <style>
-        body { 
-            font-family: 'Arial', sans-serif; 
-            margin: 0; 
-            color: #333;
-            background-image: url('imagens/Fundo.jpeg');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-attachment: fixed;
-            background-size: cover;
-            background-color: rgba(255, 255, 255, 0.8);
-            background-blend-mode: lighten;
-        }
+        body { font-family: 'Arial', sans-serif; margin: 0; color: #333; background-image: url('imagens/Fundo.jpeg'); background-repeat: no-repeat; background-position: center center; background-attachment: fixed; background-size: cover; background-color: rgba(255, 255, 255, 0.8); background-blend-mode: lighten; }
         nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
         .hero { padding: 40px; background: white; text-align: center; }
         .produtos-container { padding: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        
         .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; cursor: pointer; border: 3px solid transparent; transition: 0.3s; }
         .card.selecionado { border: 3px solid #28a745; }
         .card.esgotado { opacity: 0.5; cursor: not-allowed; pointer-events: none; filter: grayscale(100%); }
         .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        
         .form-area { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; margin-bottom: 15px; }
         .btn-acao { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; }
@@ -71,6 +58,9 @@
         let produtoSelecionado = { nome: '', preco: 0 };
         const VALOR_FRETE = 15.90;
 
+        // COLE AQUI A SUA URL DO MAKE ENTRE AS ASPAS:
+        const URL_WEBHOOK_MAKE = 'https://hook.us2.make.com/n6vmv9ln5vyug9v0qrwvjq1lk5skimxo';
+
         window.onload = () => {
             document.querySelectorAll('.card').forEach(card => {
                 const nome = card.querySelector('h3').innerText;
@@ -95,6 +85,14 @@
             if(!produtoSelecionado.nome) return alert("Selecione um produto!");
             if(!nome || !endereco || !whatsapp) return alert("Preencha todos os dados de entrega!");
 
+            // 1. Envia dados para o Make (Webhook) automaticamente
+            fetch(URL_WEBHOOK_MAKE, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, endereco, whatsapp, produto: produtoSelecionado.nome })
+            });
+
+            // 2. Prossegue para o Mercado Pago
             const pedido = {
                 dadosEntrega: { nome, endereco, whatsapp },
                 itens: [{ id: "1", nome: produtoSelecionado.nome, preco: produtoSelecionado.preco + VALOR_FRETE }]
@@ -108,10 +106,6 @@
             const data = await response.json();
             
             if(data.init_point) {
-                // Envia dados para o seu WhatsApp antes de redirecionar
-                const mensagem = `Novo pedido na Silas Store!%0ACliente: ${nome}%0AEndereço: ${endereco}%0AProduto: ${produtoSelecionado.nome}`;
-                window.open(`https://wa.me/5511942336035?text=${mensagem}`, '_blank');
-                
                 window.location.href = data.init_point;
             } else {
                 alert("Erro ao conectar ao pagamento");
