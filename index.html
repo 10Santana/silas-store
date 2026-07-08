@@ -2,67 +2,92 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    
+    <title>Silas Store | Loja Oficial</title>
     <style>
         body { 
             font-family: 'Arial', sans-serif; 
-    margin: 0; 
-    color: #333;
-    /* Configuração para o logo ocupar a página toda */
-    background-image: url('imagens/Fundo.jpeg'); /* Verifique o nome do arquivo */
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: cover; /* Isso faz a imagem esticar para preencher tudo */
-    background-color: rgba(255, 255, 255, 0.8); /* Fundo branco levemente transparente */
-    background-blend-mode: lighten; /* Mistura a imagem com o fundo */
+            margin: 0; 
+            color: #333;
+            background-image: url('imagens/Fundo.jpeg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: cover;
+            background-color: rgba(255, 255, 255, 0.8);
+            background-blend-mode: lighten;
         }
         nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
         .hero { padding: 40px; background: white; text-align: center; }
         .produtos-container { padding: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; cursor: pointer; border: 3px solid transparent; }
+        
+        /* Estilos do Card e trava de estoque */
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; cursor: pointer; border: 3px solid transparent; transition: 0.3s; }
         .card.selecionado { border: 3px solid #28a745; }
+        .card.esgotado { opacity: 0.5; cursor: not-allowed; pointer-events: none; filter: grayscale(100%); }
         .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        
         .form-area { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .input-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; margin-bottom: 15px; }
         .btn-acao { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
     <nav><div class="logo">SILAS STORE</div></nav>
-    <div class="hero"><h1>LOJA OFICIAL</h1></div>
-    <title>Silas Store | Loja Oficial</title>
+    <div class="hero">
+        <h1>LOJA OFICIAL</h1>
+        <p style="font-size: 1.8em; color: #333; font-style: italic; margin-top: -10px; text-align: center;">Bom dia pra quem?!</p>
+    </div>
+
     <div class="produtos-container">
         <div class="card" onclick="selecionarProduto(this, 120.00, 'Camiseta Preta')">
             <img src="imagens/Camiseta Preta.jpeg" alt="Camiseta">
             <h3>Camiseta Preta</h3>
-            <p style="font-size: 0.9em; color: #666; margin-top: -10px; margin-bottom: 10px;">Camiseta Preta Modelo Oversize. Bom dia para quem? </p>
+            <p style="font-size: 0.9em; color: #666; margin-top: -10px; margin-bottom: 10px;">Camiseta Preta Modelo Oversize. Bom dia para quem?</p>
             <p>R$ 120,00</p>
         </div>
-        <div class="card" onclick="selecionarProduto(this, 70.90, 'Caneca de Vermelha')">
+        <div class="card" onclick="selecionarProduto(this, 80.00, 'Caneca de Vermelha')">
             <img src="imagens/Caneca Vermelha.jpeg" alt="Caneca">
             <h3>Caneca de Vermelha</h3>
-            <p style="font-size: 0.9em; color: #666; margin-top: -10px; margin-bottom: 10px;">CANECA EXCLUSIVA BOM DIA PRA QUEM!?  Cerâmica Rústica Premium 325 ml – Vermelha Granitada </p>
+            <p style="font-size: 0.9em; color: #666; margin-top: -10px; margin-bottom: 10px;">CANECA EXCLUSIVA. Cerâmica Rústica Premium 325 ml.</p>
             <p>R$ 80,00</p>
         </div>
-        <div class="card" onclick="selecionarProduto(this, 70.90, 'Caneca de Preta')">
+        <div class="card" onclick="selecionarProduto(this, 70.00, 'Caneca de Preta')">
             <img src="imagens/Caneca Preta.jpeg" alt="Caneca">
             <h3>Caneca de Preta</h3>
-            <p style="font-size: 0.85em; color: #555; margin-top: -10px; margin-bottom: 10px;">CANECA EXCLUSIVA BOM DIA PRA QUEM!?  Cerâmica Rústica Premium 325 ml – PRETA FOSCA Granitada .</p>
+            <p style="font-size: 0.85em; color: #555; margin-top: -10px; margin-bottom: 10px;">CANECA EXCLUSIVA. Cerâmica Rústica Premium 325 ml.</p>
             <p>R$ 70,00</p>
         </div>
     </div>
+
     <div class="form-area">
         <h3>Dados de Entrega</h3>
-        <input type="text" id="nome" placeholder="Nome Completo" style="margin-bottom:10px;">
-        <input type="text" id="endereco" placeholder="Endereço Completo" style="margin-bottom:10px;">
-        <input type="text" id="whatsapp" placeholder="WhatsApp (DDD+Número)" style="margin-bottom:10px;">
+        <input type="text" id="nome" placeholder="Nome Completo">
+        <input type="text" id="endereco" placeholder="Endereço Completo">
+        <input type="text" id="whatsapp" placeholder="WhatsApp (DDD+Número)">
         <button class="btn-acao" onclick="finalizarCompra()">FINALIZAR COMPRA</button>
     </div>
+
     <script>
+        // ESTOQUE CONFIGURÁVEL AQUI
+        const estoque = {
+            'Camiseta Preta': 5,
+            'Caneca de Vermelha': 0,
+            'Caneca de Preta': 10
+        };
+
         let produtoSelecionado = { nome: '', preco: 0 };
         const VALOR_FRETE = 15.90;
+
+        // Bloqueia itens esgotados automaticamente ao carregar
+        window.onload = () => {
+            document.querySelectorAll('.card').forEach(card => {
+                const nome = card.querySelector('h3').innerText;
+                if (estoque[nome] === 0) {
+                    card.classList.add('esgotado');
+                    card.innerHTML += '<p style="color:red; font-weight:bold;">ESGOTADO</p>';
+                }
+            });
+        };
 
         function selecionarProduto(el, preco, nome) {
             document.querySelectorAll('.card').forEach(c => c.classList.remove('selecionado'));
@@ -83,6 +108,7 @@
                 },
                 itens: [{ id: "1", nome: produtoSelecionado.nome, preco: produtoSelecionado.preco + VALOR_FRETE }]
             };
+            
             const response = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
