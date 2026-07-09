@@ -39,9 +39,9 @@
         const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbzyTARXWqXrMN7zZv-s-_EEpAObJR5Ybnde5Q7ogFqsNlEwSw4Yt3V_q3cnwAENINB3/exec';
         const VALOR_FRETE = 15.90;
         let produtos = [
-            { nome: 'Camiseta Preta', preco: 120.00, estoque: 0, img: 'imagens/Camiseta Preta.jpeg' },
-            { nome: 'Caneca Vermelha', preco: 80.00, estoque: 5, img: 'imagens/Caneca Vermelha.jpeg' },
-            { nome: 'Caneca Preta', preco: 70.00, estoque: 11, img: 'imagens/Caneca Preta.jpeg' }
+            { nome: 'Camiseta Preta', preco: 120.00, estoque: 0, img: 'imagens/Camiseta Preta.jpeg', descricao: 'Sua descrição aqui' },
+            { nome: 'Caneca Vermelha', preco: 80.00, estoque: 5, img: 'imagens/Caneca Vermelha.jpeg', descricao: 'Sua descrição aqui' },
+            { nome: 'Caneca Preta', preco: 70.00, estoque: 11, img: 'imagens/Caneca Preta.jpeg', descricao: 'Sua descrição aqui' }
         ];
         let carrinho = [];
 
@@ -49,9 +49,11 @@
         produtos.forEach(p => {
             const card = document.createElement('div');
             card.className = 'card' + (p.estoque === 0 ? ' esgotado' : '');
+            // Descrição incluída abaixo:
             card.innerHTML = `
                 <img src="${p.img}" alt="${p.nome}">
                 <h3>${p.nome}</h3>
+                <p>${p.descricao}</p>
                 <p>R$ ${p.preco.toFixed(2)}</p>
                 <button class="btn-add" onclick="adicionar('${p.nome}', ${p.preco})">Adicionar ao Carrinho</button>
             `;
@@ -74,7 +76,6 @@
             const total = carrinho.reduce((acc, item) => acc + item.preco, 0) + VALOR_FRETE;
             const resumo = carrinho.map(i => i.nome).join(", ");
 
-            // Tenta enviar o e-mail, mas não bloqueia o fluxo se falhar
             try {
                 await fetch(URL_GOOGLE_SCRIPT, {
                     method: 'POST',
@@ -84,7 +85,6 @@
                 console.error("Erro ao enviar e-mail:", err);
             }
 
-            // Realiza o pagamento
             const response = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
