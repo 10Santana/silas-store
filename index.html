@@ -25,7 +25,7 @@
     </div>
 
     <div class="produtos-container" id="loja">
-        </div>
+    </div>
 
     <div class="form-area">
         <h3>Dados de Entrega</h3>
@@ -36,9 +36,8 @@
     </div>
 
     <script>
-        const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbzyTARXWqXrMN7zZv-s-_EEpAObJR5Ybnde5Q7ogFqsNlEwSw4Yt3V_q3cnwAENINB3/exec'; // <--- COLE AQUI SUA URL
+        const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbzyTARXWqXrMN7zZv-s-_EEpAObJR5Ybnde5Q7ogFqsNlEwSw4Yt3V_q3cnwAENINB3/exec';
         const VALOR_FRETE = 15.90;
-        
         let produtos = [
             { nome: 'Camiseta Preta', preco: 120.00, estoque: 5, img: 'imagens/Camiseta Preta.jpeg' },
             { nome: 'Caneca Vermelha', preco: 80.00, estoque: 0, img: 'imagens/Caneca Vermelha.jpeg' },
@@ -50,7 +49,6 @@
         produtos.forEach(p => {
             const card = document.createElement('div');
             card.className = 'card' + (p.estoque === 0 ? ' esgotado' : '');
-            // Estrutura que mantém seu visual e adiciona o botão de carrinho
             card.innerHTML = `
                 <img src="${p.img}" alt="${p.nome}">
                 <h3>${p.nome}</h3>
@@ -76,19 +74,29 @@
             const total = carrinho.reduce((acc, item) => acc + item.preco, 0) + VALOR_FRETE;
             const resumo = carrinho.map(i => i.nome).join(", ");
 
-            fetch(URL_GOOGLE_SCRIPT, {
-                method: 'POST',
-                body: new URLSearchParams({ nome, endereco, whatsapp, produto: resumo, total: total.toFixed(2) })
-            });
+            // Tenta enviar o e-mail, mas não bloqueia o fluxo se falhar
+            try {
+                await fetch(URL_GOOGLE_SCRIPT, {
+                    method: 'POST',
+                    body: new URLSearchParams({ nome, endereco, whatsapp, produto: resumo, total: total.toFixed(2) })
+                });
+            } catch (err) {
+                console.error("Erro ao enviar e-mail:", err);
+            }
 
+            // Realiza o pagamento
             const response = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ itens: carrinho, total })
+                body: JSON.stringify({ itens: carrinho, total: total })
             });
+            
             const data = await response.json();
-            if(data.init_point) window.location.href = data.init_point;
-            else alert("Erro ao processar pagamento.");
+            if(data.init_point) {
+                window.location.href = data.init_point;
+            } else {
+                alert("Erro ao processar pagamento.");
+            }
         }
     </script>
 </body>
