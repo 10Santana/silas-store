@@ -4,81 +4,97 @@
     <meta charset="UTF-8">
     <title>Silas Store | Loja Oficial</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; text-align: center; }
-        .produtos-container { display: flex; justify-content: center; gap: 20px; padding: 20px; flex-wrap: wrap; }
-        .card { background: white; padding: 20px; border-radius: 10px; width: 200px; border: 2px solid #ddd; }
-        .esgotado { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
-        .btn-add { background: #007bff; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 5px; }
-        .form-area { max-width: 400px; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
-        .btn-acao { background: #28a745; color: white; padding: 15px; border: none; width: 100%; cursor: pointer; }
+        body { font-family: 'Arial', sans-serif; margin: 0; color: #333; background-image: url('imagens/Fundo.jpeg'); background-repeat: no-repeat; background-position: center center; background-attachment: fixed; background-size: cover; background-color: rgba(255, 255, 255, 0.8); background-blend-mode: lighten; }
+        nav { background: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; }
+        .hero { padding: 40px; background: white; text-align: center; }
+        .produtos-container { padding: 20px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 250px; text-align: center; border: 3px solid transparent; transition: 0.3s; }
+        .card.esgotado { opacity: 0.5; filter: grayscale(100%); pointer-events: none; }
+        .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .form-area { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; margin-bottom: 15px; }
+        .btn-acao { background-color: #28a745; color: white; padding: 15px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; }
+        .btn-add { background-color: #007bff; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; }
     </style>
 </head>
 <body>
-    <h1>SILAS STORE</h1>
-    <div class="produtos-container" id="loja">
-        <!-- Gerado pelo JavaScript abaixo -->
+    <nav><div class="logo">SILAS STORE</div></nav>
+    <div class="hero">
+        <h1>LOJA OFICIAL</h1>
+        <p style="font-size: 1.8em; color: #333; font-style: italic; margin-top: -10px; text-align: center;">Bom dia pra quem?!</p>
     </div>
 
+    <div class="produtos-container" id="loja">
+        </div>
+
     <div class="form-area">
+        <h3>Dados de Entrega</h3>
         <input type="text" id="nome" placeholder="Nome Completo">
-        <input type="text" id="endereco" placeholder="Endereço">
-        <input type="text" id="whatsapp" placeholder="WhatsApp">
+        <input type="text" id="endereco" placeholder="Endereço Completo">
+        <input type="text" id="whatsapp" placeholder="WhatsApp (DDD+Número)">
         <button class="btn-acao" onclick="finalizarCompra()">FINALIZAR COMPRA</button>
     </div>
 
     <script>
-        // CONFIGURAÇÃO
         const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbzyTARXWqXrMN7zZv-s-_EEpAObJR5Ybnde5Q7ogFqsNlEwSw4Yt3V_q3cnwAENINB3/exec';
         const VALOR_FRETE = 15.90;
         
+        // Definição dos produtos com fotos e estoque
         let produtos = [
-            { id: 1, nome: 'Camiseta Preta', preco: 120.00, estoque: 5 },
-            { id: 2, nome: 'Caneca Vermelha', preco: 80.00, estoque: 0 },
-            { id: 3, nome: 'Caneca Preta', preco: 70.00, estoque: 11 }
+            { id: 1, nome: 'Camiseta Preta', preco: 120.00, estoque: 5, img: 'imagens/Camiseta Preta.jpeg' },
+            { id: 2, nome: 'Caneca Vermelha', preco: 80.00, estoque: 0, img: 'imagens/Caneca Vermelha.jpeg' },
+            { id: 3, nome: 'Caneca Preta', preco: 70.00, estoque: 11, img: 'imagens/Caneca Preta.jpeg' }
         ];
         let carrinho = [];
 
-        // Renderiza produtos na tela
+        // Renderiza os produtos mantendo seu layout original
         const container = document.getElementById('loja');
         produtos.forEach(p => {
             const card = document.createElement('div');
             card.className = 'card' + (p.estoque === 0 ? ' esgotado' : '');
-            card.innerHTML = `<h3>${p.nome}</h3><p>R$ ${p.preco.toFixed(2)}</p>
-                              <button class="btn-add" onclick="adicionar('${p.nome}', ${p.preco})">Adicionar</button>`;
+            card.innerHTML = `
+                <img src="${p.img}" alt="${p.nome}">
+                <h3>${p.nome}</h3>
+                <p>R$ ${p.preco.toFixed(2)}</p>
+                <button class="btn-add" onclick="adicionar('${p.nome}', ${p.preco})">Adicionar ao Carrinho</button>
+            `;
             container.appendChild(card);
         });
 
         function adicionar(nome, preco) {
             carrinho.push({ nome, preco });
-            alert(nome + " adicionado!");
+            alert(nome + " adicionado ao carrinho!");
         }
 
         async function finalizarCompra() {
             const nome = document.getElementById('nome').value;
             const endereco = document.getElementById('endereco').value;
             const whatsapp = document.getElementById('whatsapp').value;
-
-            if(carrinho.length === 0) return alert("Carrinho vazio!");
-            if(!nome || !endereco || !whatsapp) return alert("Preencha os dados!");
+            
+            if(carrinho.length === 0) return alert("Carrinho vazio! Adicione algum produto.");
+            if(!nome || !endereco || !whatsapp) return alert("Preencha todos os dados de entrega!");
 
             const total = carrinho.reduce((acc, item) => acc + item.preco, 0) + VALOR_FRETE;
             const nomesItens = carrinho.map(i => i.nome).join(", ");
 
-            // Envia e-mail
+            // Envio para e-mail
             fetch(URL_GOOGLE_SCRIPT, {
                 method: 'POST',
                 body: new URLSearchParams({ nome, endereco, whatsapp, produto: nomesItens, total: total.toFixed(2) })
             });
 
-            // Redireciona para Checkout (seu backend original)
-            const res = await fetch('/api/checkout', {
+            // Envio para Mercado Pago
+            const response = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ itens: carrinho, total })
+                body: JSON.stringify({ 
+                    dadosEntrega: { nome, endereco, whatsapp }, 
+                    itens: carrinho.map(i => ({ nome: i.nome, preco: i.preco })) 
+                })
             });
-            const data = await res.json();
+            const data = await response.json();
             if(data.init_point) window.location.href = data.init_point;
+            else alert("Erro ao processar pagamento.");
         }
     </script>
 </body>
