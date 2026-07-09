@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         const itemsFormatados = itens.map(item => ({
             id: "1",
             title: item.nome,
-            unit_price: Number(item.preco),
+            unit_price: Number(item.preco) + 20.00,
             quantity: 1,
             currency_id: 'BRL'
         }));
