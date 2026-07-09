@@ -28,19 +28,16 @@
         <div class="card" onclick="selecionarProduto(this, 120.00, 'Camiseta Preta')">
             <img src="imagens/Camiseta Preta.jpeg" alt="Camiseta">
             <h3>Camiseta Preta</h3>
-            <p style="font-size: 0.9em; color: #666; margin-top: -10px; margin-bottom: 10px;">Camiseta Preta Modelo Oversize. Bom dia para quem?</p>
             <p>R$ 120,00</p>
         </div>
         <div class="card" onclick="selecionarProduto(this, 80.00, 'Caneca de Vermelha')">
             <img src="imagens/Caneca Vermelha.jpeg" alt="Caneca">
             <h3>Caneca de Vermelha</h3>
-            <p style="font-size: 0.9em; color: #666; margin-top: -10px; margin-bottom: 10px;">CANECA EXCLUSIVA. Cerâmica Rústica Premium 325 ml.</p>
             <p>R$ 80,00</p>
         </div>
         <div class="card" onclick="selecionarProduto(this, 70.00, 'Caneca de Preta')">
             <img src="imagens/Caneca Preta.jpeg" alt="Caneca">
             <h3>Caneca de Preta</h3>
-            <p style="font-size: 0.85em; color: #555; margin-top: -10px; margin-bottom: 10px;">CANECA EXCLUSIVA. Cerâmica Rústica Premium 325 ml.</p>
             <p>R$ 70,00</p>
         </div>
     </div>
@@ -54,22 +51,10 @@
     </div>
 
     <script>
-        const estoque = { 'Camiseta Preta': 0, 'Caneca de Vermelha': 5, 'Caneca de Preta': 11 };
+        const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbzyTARXWqXrMN7zZv-s-_EEpAObJR5Ybnde5Q7ogFqsNlEwSw4Yt3V_q3cnwAENINB3/exec'; 
+
         let produtoSelecionado = { nome: '', preco: 0 };
         const VALOR_FRETE = 15.90;
-
-        // COLE AQUI A SUA URL DO MAKE ENTRE AS ASPAS:
-        const URL_WEBHOOK_MAKE = 'https://hook.us2.make.com/n6vmv9ln5vyug9v0qrwvjq1lk5skimxo';
-
-        window.onload = () => {
-            document.querySelectorAll('.card').forEach(card => {
-                const nome = card.querySelector('h3').innerText;
-                if (estoque[nome] === 0) {
-                    card.classList.add('esgotado');
-                    card.innerHTML += '<p style="color:red; font-weight:bold;">ESGOTADO</p>';
-                }
-            });
-        };
 
         function selecionarProduto(el, preco, nome) {
             document.querySelectorAll('.card').forEach(c => c.classList.remove('selecionado'));
@@ -85,31 +70,26 @@
             if(!produtoSelecionado.nome) return alert("Selecione um produto!");
             if(!nome || !endereco || !whatsapp) return alert("Preencha todos os dados de entrega!");
 
-            // 1. Envia dados para o Make (Webhook) automaticamente
-            fetch(URL_WEBHOOK_MAKE, {
+            // Envia para seu e-mail usando o formato compatível com e.parameter
+            fetch(URL_GOOGLE_SCRIPT, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, endereco, whatsapp, produto: produtoSelecionado.nome })
+                body: new URLSearchParams({
+                    nome: nome,
+                    endereco: endereco,
+                    whatsapp: whatsapp,
+                    produto: produtoSelecionado.nome
+                })
             });
 
-            // 2. Prossegue para o Mercado Pago
-            const pedido = {
-                dadosEntrega: { nome, endereco, whatsapp },
-                itens: [{ id: "1", nome: produtoSelecionado.nome, preco: produtoSelecionado.preco + VALOR_FRETE }]
-            };
-            
+            // Prossegue para o Mercado Pago
             const response = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pedido)
+                body: JSON.stringify({ dadosEntrega: { nome, endereco, whatsapp }, itens: [{ nome: produtoSelecionado.nome, preco: produtoSelecionado.preco + VALOR_FRETE }] })
             });
             const data = await response.json();
-            
-            if(data.init_point) {
-                window.location.href = data.init_point;
-            } else {
-                alert("Erro ao conectar ao pagamento");
-            }
+            if(data.init_point) window.location.href = data.init_point;
+            else alert("Erro ao processar pagamento.");
         }
     </script>
 </body>
