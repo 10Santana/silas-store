@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
             method: 'POST',
             headers: {
-                
+
                 'Authorization': 'Bearer APP_USR-1510712514068245-070913-34f63e07278bce94eb02d2719935f621-421736394 ', // Substitua pelo seu Token real
                 'Content-Type': 'application/json',
             },
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
                 items: itemsFormatados,
                 back_urls: { 
                     success: "https://silas-store-beta.vercel.app/", 
+                    
                     failure: "https://silas-store-beta.vercel.app/" 
                 },
                 auto_return: "approved"
